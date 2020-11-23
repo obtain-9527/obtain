@@ -4,10 +4,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
@@ -29,12 +32,12 @@ public class WebSecurityConfigurer extends WebSecurityConfigurerAdapter {
 
     @Bean
     public UserDetailsService userDetailsService(){ //主要是配置这个Bean，用于授权服务器配置中注入
-        return super.userDetailsService();
+        return new MyUserDetailsService();
     }
 
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-        auth.inMemoryAuthentication().withUser("admin").password("admin").authorities("IS_AUTHENTICATED_FULLY");
+        auth.userDetailsService(userDetailsService());
     }
     @Override
     public void configure(HttpSecurity http) throws Exception {

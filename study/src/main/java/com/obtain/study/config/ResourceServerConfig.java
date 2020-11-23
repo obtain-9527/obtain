@@ -21,7 +21,9 @@ public class ResourceServerConfig extends ResourceServerConfigurerAdapter {
     private String secrecy = "yj.obtain.com";
     @Override
     public void configure(HttpSecurity http) throws Exception {
-        super.configure(http);
+        http.csrf().disable()
+                .authorizeRequests()
+                .antMatchers("/api/map").permitAll();
     }
 
     @Override
